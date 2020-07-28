@@ -3,11 +3,11 @@ name: Release (checkers)
 on:
   push:
     tags:
-    - '*'
+    - 'v*'
 
 jobs:
-  release:
-    name: Upload Release Assets
+  job1:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
@@ -21,35 +21,33 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Build and Release
-        runs-on: ${{ matrix.os }}
-        strategy:
-          matrix:
-            os:
-              - windows-latest
-              - ubuntu-latest
-              - macOS-latest 
-        steps:
-          - name: make all
-            run: |
-              cd checkers
-              mkdir build
-              make all
-         
-          - name: Create tarball
-            run: |
-              cd checkers/build
-              tar -czvf ${{ matrix.os }}.tar.gz *
-         
-          - name: Upload asset
-            id: upload-release-asset
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }}
-              asset_path: checkers/build/${{ matrix.os }}.tar.gz
-              asset_name: ${{ matrix.os }}.tar.gz
+  job2:
+    name: Build
+    needs: job1
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: make all
+        run: |
+          cd checkers
+          mkdir build
+          make all
+      - name: Create tarball
+        run: |
+          cd checkers/build
+          tar -czvf ${{ matrix.os }}.tar.gz *
+      - name: Upload assets
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: checkers/build/${{ matrix.os }}.tar.gz
+          asset_name: ${{ matrix.os }}.tar.gz
