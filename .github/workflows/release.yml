@@ -54,3 +54,4 @@ jobs:
           upload_url: ${{ needs.job1.outputs.upload_url }}
           asset_path: checkers/build/${{ matrix.os }}.tar.gz
           asset_name: ${{ matrix.os }}.tar.gz
+          asset_content_type: application/gzip
