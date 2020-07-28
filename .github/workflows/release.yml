@@ -41,10 +41,23 @@ jobs:
           cd checkers
           mkdir build
           make all
+
+      - name: Set GOOS (windows)
+        if: matrix.os == 'windows-latest'
+        run: echo "::set-env name=GOOS::windows"
+      
+      - name: Set GOOS (linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: echo "::set-env name=GOOS::linux"
+
+      - name: Set GOOS (darwin)
+        if: matrix.os == 'macOS-latest'
+        run: echo "::set-env name=GOOS::darwin"
+
       - name: Create tarball
         run: |
           cd checkers/build
-          tar -czvf ../../${{ matrix.os }}.tar.gz *
+          tar -czvf ../../${{ env.GOOS }}.tar.gz *
       - name: Upload assets
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -52,6 +65,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.job1.outputs.upload_url }}
-          asset_path: ${{ matrix.os }}.tar.gz
-          asset_name: ${{ matrix.os }}.tar.gz
+          asset_path: ${{ env.GOOS }}.tar.gz
+          asset_name: cpt-checker_${{ env.GOOS }}.tar.gz
           asset_content_type: application/gzip
