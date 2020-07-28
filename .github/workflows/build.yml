@@ -28,8 +28,21 @@ jobs:
           cd checkers
           mkdir build
           make all
+
+      - name: Set GOOS (windows)
+        if: matrix.os == 'windows-latest'
+        run: echo "::set-env name=GOOS::windows"
+      
+      - name: Set GOOS (linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: echo "::set-env name=GOOS::linux"
+
+      - name: Set GOOS (darwin)
+        if: matrix.os == 'macOS-latest'
+        run: echo "::set-env name=GOOS::darwin"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: checkers-${{ matrix.os }}
+          name: cpt-checker_${{ env.GOOS }}
           path: checkers/build
