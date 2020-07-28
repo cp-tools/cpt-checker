@@ -48,6 +48,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ jobs.job1.steps.create_release.outputs.upload_url }}
+          upload_url: ${{ needs.job1.steps.create_release.outputs.upload_url }}
           asset_path: checkers/build/${{ matrix.os }}.tar.gz
           asset_name: ${{ matrix.os }}.tar.gz
