@@ -9,6 +9,9 @@ jobs:
   job1:
     name: Create Release
     runs-on: ubuntu-latest
+    outputs: 
+      upload_url: ${{ steps.create_release.outputs.upload_url }} 
+    
     steps:
       - name: Create Release
         id: create_release
@@ -48,6 +51,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.job1.steps.create_release.outputs.upload_url }}
+          upload_url: ${{ needs.job1.outputs.upload_url }}
           asset_path: checkers/build/${{ matrix.os }}.tar.gz
           asset_name: ${{ matrix.os }}.tar.gz
