@@ -1,0 +1,31 @@
+name: Build (checkers)
+
+on:
+  push:
+    tags-ignore:
+      - 'v*'
+  pull_request:
+    
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: make all
+        run: |
+          cd checkers
+          mkdir build
+          make all
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: checkers-${{ matrix.os }}
+          path: checkers/build
