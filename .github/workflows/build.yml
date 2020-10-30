@@ -2,14 +2,13 @@ name: Build (checkers)
 
 on:
   push:
-    tags-ignore:
-      - 'v*'
-    paths:
-      - 'checkers/**'
+    branches: [master]
+    tags-ignore: ['*']
+    path: ['checkers/**']
+
   pull_request:
-    paths:
-      - 'checkers/**'
-    
+    branches: [master]    
+    path: ['checkers/**']
 
 jobs:
   build:
@@ -23,6 +22,7 @@ jobs:
           - macOS-latest
     steps:
       - uses: actions/checkout@v2
+      
       - name: make all
         run: |
           cd checkers
@@ -45,4 +45,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cpt-checker_${{ env.GOOS }}
-          path: checkers/build
+          path: |
+            checkers/build
+            checkers/meta.yaml

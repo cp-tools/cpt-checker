@@ -1,0 +1,18 @@
+checker:
+  version: v0.1.1
+  checkers:
+    lcmp:
+      desc: compare files as sequence of tokens in lines
+      script: $FILEPATH {{ .inputFile }} {{ .outputFile }} {{ .expectedFile }}
+  
+    myesno:
+      desc: multiple YES/NO (case insensitive)
+      script: $FILEPATH {{ .inputFile }} {{ .outputFile }} {{ .expectedFile }}
+
+    ncmp:
+      desc: compare ordered sequences of signed int64 numbers
+      script: $FILEPATH {{ .inputFile }} {{ .outputFile }} {{ .expectedFile }}
+
+    rcmp6:
+      desc: compare two sequences of doubles, max absolute or relative  error = 0.0000010
+      script: $FILEPATH {{ .inputFile }} {{ .outputFile }} {{ .expectedFile }}
