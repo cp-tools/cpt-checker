@@ -1,5 +1,5 @@
 checker:
-  version: "v0.2.0"
+  version: "v0.2.1"
   checkers:
     lcmp:
       desc: "compare files as sequence of tokens in lines"
