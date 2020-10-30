@@ -4,11 +4,11 @@ on:
   push:
     branches: [master]
     tags-ignore: ['*']
-    path: ['checkers/**']
+    paths: ['checkers/**']
 
   pull_request:
     branches: [master]    
-    path: ['checkers/**']
+    paths: ['checkers/**']
 
 jobs:
   build:
@@ -31,20 +31,20 @@ jobs:
 
       - name: Set GOOS (windows)
         if: matrix.os == 'windows-latest'
-        run: echo "::set-env name=GOOS::windows"
+        run: echo "GOOS=windows" >> $GITHUB_ENV
       
       - name: Set GOOS (linux)
         if: matrix.os == 'ubuntu-latest'
-        run: echo "::set-env name=GOOS::linux"
+        run: echo "GOOS=linux" >> $GITHUB_ENV
 
       - name: Set GOOS (darwin)
         if: matrix.os == 'macOS-latest'
-        run: echo "::set-env name=GOOS::darwin"
+        run: echo "GOOS=darwin" >> $GITHUB_ENV
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: cpt-checker_${{ env.GOOS }}
           path: |
-            checkers/build
+            checkers/build/*
             checkers/meta.yaml
